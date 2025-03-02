@@ -1,0 +1,5 @@
+# environment files should not get pushed up to GitHub
+.env
+
+# local configuration files
+launch.json

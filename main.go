@@ -3,50 +3,30 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
+	"nba-players/client"
+	"nba-players/errorhandler"
 	"nba-players/representations"
-	"net/http"
-	"time"
 )
 
+var errors []error
+
 func main() {
-	// Create an HTTP client with a timeout
-	client := &http.Client{
-		Timeout: 10 * time.Second,
-	}
-
-	// API endpoint for all players (first page, 100 players per page)
-	url := "https://www.balldontlie.io/api/v1/players?per_page=100"
-
-	// Set headers for the request - Authorization, Accept, etc.
-	// Get API Key from balldontlie.com
-
-	// Make the GET request
-	resp, err := client.Get(url)
+	// Send request to get player information
+	body, err := client.GetPlayers()
 	if err != nil {
-		fmt.Printf("Error making API request: %v\n", err)
-		return
-	}
-	defer resp.Body.Close()
-
-	// Check if the response status is OK
-	if resp.StatusCode != http.StatusOK {
-		fmt.Printf("API returned non-OK status: %s\n", resp.Status)
+		errors = append(errors, err)
+		errorhandler.Return(errors)
 		return
 	}
 
-	// Read the response body
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Printf("Error reading response body: %v\n", err)
-		return
-	}
+	// TODO: move unmarshaling json, translating rep and domain structs into service layer
 
 	// Unmarshal the JSON into our struct
 	var apiResponse representations.APIResponse
 	err = json.Unmarshal(body, &apiResponse)
 	if err != nil {
-		fmt.Printf("Error unmarshaling JSON: %v\n", err)
+		errors = append(errors, err)
+		errorhandler.Return(errors)
 		return
 	}
 
