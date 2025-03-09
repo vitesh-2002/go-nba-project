@@ -1,34 +1,23 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"nba-players/client"
 	"nba-players/errorhandler"
-	"nba-players/representations"
 )
 
 var errors []error
 
 func main() {
 	// Send request to get player information
-	body, err := client.GetPlayers()
+	apiResponse, err := client.GetPlayers()
 	if err != nil {
 		errors = append(errors, err)
 		errorhandler.Return(errors)
 		return
 	}
 
-	// TODO: move unmarshaling json, translating rep and domain structs into service layer
-
-	// Unmarshal the JSON into our struct
-	var apiResponse representations.APIResponse
-	err = json.Unmarshal(body, &apiResponse)
-	if err != nil {
-		errors = append(errors, err)
-		errorhandler.Return(errors)
-		return
-	}
+	// TODO: translating rep and domain structs in service layer
 
 	// TODO: eventually just print out all the data into a file or terminal
 	// TODO: eventually hook this up to a DB connection and store players in a database table

@@ -1,9 +1,8 @@
 # go-nba-project
 
-client will handle making api calls and returning the bytes
+client will handle making api calls, returning the bytes, and handle unmarshaling the json into representation structs. 
 
-service will handle unmarshaling the json into representation structs
-then those representation structs will be translated to domain structs
+domain will handle validation, translating to domain structs, and passing down to the repo for persistence.  
 
 repo/db layer will handle persisting domain structs to the DB and retrieving/updating records when necessary
 
